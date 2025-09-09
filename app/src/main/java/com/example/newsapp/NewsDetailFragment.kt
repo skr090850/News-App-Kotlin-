@@ -16,7 +16,6 @@ class NewsDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_news_detail, container, false)
     }
 
@@ -34,10 +33,11 @@ class NewsDetailFragment : Fragment() {
                     progressBar.visibility = View.GONE
                 }
             }
-            settings.javaScriptEnabled = true // Enable JavaScript for modern websites
+            settings.javaScriptEnabled = true
             url?.let {
                 loadUrl(it)
             }
         }
     }
 }
+
