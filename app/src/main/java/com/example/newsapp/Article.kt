@@ -1,17 +1,14 @@
 package com.example.newsapp.data
 
+// Updated data class for The Guardian API structure
 data class Article(
-    val author: String?,
-    val content: String?,
-    val description: String?,
-    val publishedAt: String?,
-    val source: Source?,
-    val title: String?,
-    val url: String?,
-    val urlToImage: String?
+    val webTitle: String?,
+    val webUrl: String?,
+    val fields: ArticleFields?
 )
 
-data class Source(
-    val id: String?,
-    val name: String?
+data class ArticleFields(
+    val thumbnail: String?,
+    val trailText: String?
 )
+

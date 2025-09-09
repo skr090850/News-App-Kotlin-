@@ -30,11 +30,11 @@ class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleD
         private val articleDescription: TextView = itemView.findViewById(R.id.article_description)
 
         fun bind(article: Article) {
-            articleTitle.text = article.title
-            articleDescription.text = article.description
+            articleTitle.text = article.webTitle
+            articleDescription.text = article.fields?.trailText
 
             Glide.with(itemView.context)
-                .load(article.urlToImage)
+                .load(article.fields?.thumbnail)
                 .placeholder(R.drawable.ic_placeholder)
                 .error(R.drawable.ic_placeholder)
                 .into(articleImage)
@@ -43,7 +43,7 @@ class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleD
 
     class ArticleDiffCallback : DiffUtil.ItemCallback<Article>() {
         override fun areItemsTheSame(oldItem: Article, newItem: Article): Boolean {
-            return oldItem.url == newItem.url
+            return oldItem.webUrl == newItem.webUrl
         }
 
         override fun areContentsTheSame(oldItem: Article, newItem: Article): Boolean {
@@ -51,3 +51,4 @@ class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleD
         }
     }
 }
+

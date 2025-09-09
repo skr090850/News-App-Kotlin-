@@ -1,45 +1,47 @@
 package com.example.newsapp.ui
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.Article
 import com.example.newsapp.data.NewsRepository
+import com.example.newsapp.data.NewsResponse
+import com.example.newsapp.util.Resource
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import java.io.IOException
 
-class NewsViewModel : ViewModel() {
+class NewsViewModel(private val repository: NewsRepository) : ViewModel() {
 
-    private val repository = NewsRepository()
-
-    private val _articles = MutableLiveData<List<Article>>()
-    val articles: LiveData<List<Article>> = _articles
-
-    private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
-
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> = _error
+    val articles: MutableLiveData<Resource<List<Article>>> = MutableLiveData()
 
     init {
         fetchTopHeadlines()
     }
 
-    fun fetchTopHeadlines() {
+    private fun fetchTopHeadlines() {
+        articles.postValue(Resource.Loading())
         viewModelScope.launch {
-            _isLoading.value = true
             try {
                 val response = repository.getTopHeadlines()
-                if (response.isSuccessful) {
-                    _articles.value = response.body()?.articles ?: emptyList()
-                } else {
-                    _error.value = "Error: ${response.message()}"
+                articles.postValue(handleNewsResponse(response))
+            } catch (t: Throwable) {
+                when(t) {
+                    is IOException -> articles.postValue(Resource.Error("Network Failure: ${t.message}"))
+                    else -> articles.postValue(Resource.Error("Conversion Error: ${t.message}"))
                 }
-            } catch (e: Exception) {
-                _error.value = "Exception: ${e.message}"
-            } finally {
-                _isLoading.value = false
             }
         }
     }
+
+    private fun handleNewsResponse(response: Response<NewsResponse>): Resource<List<Article>> {
+        if (response.isSuccessful) {
+            response.body()?.let { resultResponse ->
+                val articlesList = resultResponse.response?.results ?: emptyList()
+                return Resource.Success(articlesList)
+            }
+        }
+        return Resource.Error(response.message())
+    }
 }
+
