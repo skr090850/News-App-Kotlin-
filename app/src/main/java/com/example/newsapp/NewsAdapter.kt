@@ -14,6 +14,8 @@ import com.example.newsapp.data.Article
 
 class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleDiffCallback()) {
 
+    private var onItemClickListener: ((Article) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_news_article, parent, false)
         return ArticleViewHolder(view)
@@ -22,6 +24,13 @@ class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleD
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = getItem(position)
         holder.bind(article)
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.let { it(article) }
+        }
+    }
+
+    fun setOnItemClickListener(listener: (Article) -> Unit) {
+        onItemClickListener = listener
     }
 
     class ArticleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
