@@ -14,7 +14,6 @@ import com.example.newsapp.data.Article
 
 class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleDiffCallback()) {
 
-    // Click listener ko handle karne ke liye ek variable
     private var onItemClickListener: ((Article) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
@@ -25,13 +24,11 @@ class NewsAdapter : ListAdapter<Article, NewsAdapter.ArticleViewHolder>(ArticleD
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val article = getItem(position)
         holder.bind(article)
-        // Item click listener set karna
         holder.itemView.setOnClickListener {
             onItemClickListener?.let { it(article) }
         }
     }
 
-    // Fragment se listener set karne ke liye function
     fun setOnItemClickListener(listener: (Article) -> Unit) {
         onItemClickListener = listener
     }

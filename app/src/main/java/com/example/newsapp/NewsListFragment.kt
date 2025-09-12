@@ -26,7 +26,6 @@ class NewsListFragment : Fragment(R.layout.fragment_news_list) {
 
         setupRecyclerView()
 
-        // Adapter par click listener set karna
         newsAdapter.setOnItemClickListener { article ->
             val bundle = Bundle().apply {
                 putString("article_url", article.webUrl)
@@ -37,7 +36,7 @@ class NewsListFragment : Fragment(R.layout.fragment_news_list) {
 
             requireActivity().supportFragmentManager.beginTransaction().apply {
                 replace(R.id.fragment_container, detailFragment)
-                addToBackStack(null) // Back button se wapas aane ke liye
+                addToBackStack(null)
                 commit()
             }
         }
