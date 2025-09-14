@@ -5,6 +5,7 @@ data class Article(
     val webUrl: String?,
     val fields: ArticleFields?
 )
+
 data class ArticleFields(
     val thumbnail: String?,
     val trailText: String?
